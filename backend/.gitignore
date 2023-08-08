@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 # todo: remove
-backend/store.js
+store.js
