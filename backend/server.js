@@ -3,12 +3,15 @@ import express from 'express'
 import Course from './models/courses.js'
 import Student from './models/students.js'
 import { connect } from 'mongoose'
+import cors from 'cors'
 
 // Create an express app
 const app = express()
 
 // Use JSON middleware to parse request body
 app.use(express.json())
+
+app.use(cors())
 
 // Connect to MongoDB database
 connect('mongodb://localhost:27017/school', {

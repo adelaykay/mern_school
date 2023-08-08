@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
     }
 
     // Return a success response with status code 200 (OK) and the result as data
-    res.status(200).json({ data: students })
+    res.status(200).json(students)
   } catch (err) {
     // Handle any possible errors and return an error response with status code 500 (Internal Server Error) and the error message
     console.error(err)
@@ -85,14 +85,14 @@ router.post('/', async (req, res) => {
       date_of_birth,
       address,
       state_of_origin,
-      courses
+      courses,
     })
 
     // Save the new student object to the database and store the result in a variable
     const student = await newStudent.save()
 
     // Return a success response with status code 201 (Created) and the result as data
-    res.status(201).json({ data: student })
+    res.status(201).json(student)
   } catch (err) {
     // Handling any possible errors and return an error response with status code 500 (Internal Server Error) and the error message
     console.error(err)
@@ -108,13 +108,13 @@ router.put('/', async (req, res) => {
 
     const id = req.query.id
     // Validate the id parameter as a valid MongoDB ObjectId
-    if(!Types.ObjectId.isValid(id)){
+    if (!Types.ObjectId.isValid(id)) {
       // Return an error response with status code 400 (Bad Request)
-      return res.status(400).json({message: 'Invalid id'})
+      return res.status(400).json({ message: 'Invalid id' })
     }
 
     // Set the query to find and update a student by id
-    query = await Student.findByIdAndUpdate(id, update, {new: true})
+    query = await Student.findByIdAndUpdate(id, update, { new: true })
 
     const updatedStudent = await query.exec()
 
@@ -125,7 +125,7 @@ router.put('/', async (req, res) => {
     }
 
     // Return a success response with status code 200 (OK) and the result as data
-    res.status(200).json({ data: students })
+    res.status(200).json(updatedStudent)
 
     // student.first_name = first_name ?? student.first_name
     // student.middlename = middlename ?? student.middlename
@@ -134,12 +134,10 @@ router.put('/', async (req, res) => {
     // student.date_of_birth = date_of_birth ?? student.date_of_birth
     // student.address = address ?? student.address
     // student.state_of_origin = state_of_origin ?? student.state_of_origin
-
-
   } catch (err) {
     // Handling any possible errors and return an error response with status code 500 (Internal Server Error) and the error message
     console.log(err)
-    res.status(500).json({message: err.message})
+    res.status(500).json({ message: err.message })
   }
 })
 
@@ -170,6 +168,5 @@ router.get('/courses', (req, res) => {
       return res.status(500).send(err)
     })
 })
-
 
 export default router

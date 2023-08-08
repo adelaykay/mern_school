@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
     }
 
     // Return a success response with status code 200 (ok) and the result as data
-    res.status(200).json({ data: courses })
+    res.status(200).json(courses)
   } catch (err) {
     // Handle any possible errors and return an erro response with status code 500 (Internal Server Error) and the error message
     console.log(err)
@@ -56,13 +56,10 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     // Get the request body from the request
-    const {
-      course_name,
-      description
-    } = req.body
+    const { course_name, description } = req.body
 
     // Validate the required properties are provided
-    if (!course_name || !description ) {
+    if (!course_name || !description) {
       // Return an error response with status code 400 (Bad Request)
       return res.status(400).json({ message: 'Missing required properties' })
     }
@@ -74,7 +71,7 @@ router.post('/', async (req, res) => {
     const newCourse = new Course({
       course_name,
       description,
-      students
+      students,
     })
 
     // Save the new course object to the database and store the result in a variable
@@ -82,11 +79,10 @@ router.post('/', async (req, res) => {
 
     // Return a success response with status code 201 (Created) and the result as data
     res.status(201).json({ data: course })
-
   } catch (err) {
     // Handling any possible errors and return an error response with status code 500 (Internal Server Error) and the error message
     console.log(err)
-    res.status(500).json({message: err.message})
+    res.status(500).json({ message: err.message })
   }
 })
 
@@ -98,13 +94,13 @@ router.put('/', async (req, res) => {
 
     const id = req.query.id
     // Validate the id parameter as a valid MongoDB ObjectId
-    if(!Types.ObjectId.isValid(id)){
+    if (!Types.ObjectId.isValid(id)) {
       // Return an error response with status code 400 (Bad Request)
-      return res.status(400).json({message: 'Invalid id'})
+      return res.status(400).json({ message: 'Invalid id' })
     }
 
     // Set the query to find and update a course by id
-    query = await Course.findByIdAndUpdate(id, update, {new: true})
+    query = await Course.findByIdAndUpdate(id, update, { new: true })
 
     const updatedCourse = await query.exec()
 
@@ -116,11 +112,10 @@ router.put('/', async (req, res) => {
 
     // Return a success response with status code 200 (OK) and the result as data
     res.status(200).json({ data: updatedCourse })
-
   } catch (err) {
     // Handling any possible errors and return an error response with status code 500 (Internal Server Error) and the error message
     console.log(err)
-    res.status(500).json({message: err.message})
+    res.status(500).json({ message: err.message })
   }
 })
 
