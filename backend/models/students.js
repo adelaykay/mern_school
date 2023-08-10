@@ -30,7 +30,7 @@ const StudentSchema = new Schema({
     type: String,
     required: [true, 'state of origin is required']
   },
-  courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+  courses: [{ type: Schema.Types.ObjectId, ref: 'Course'}],
 })
 
 

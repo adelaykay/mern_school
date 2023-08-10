@@ -9,7 +9,7 @@ const CourseSchema = new Schema({
   description: {
     type: String,
   },
-  students: [{ type: Schema.Types.ObjectId, ref: 'Student' }],
+  students: [{ type: Schema.Types.ObjectId, ref: 'Student'}],
 })
 
 // Create the model for Courses

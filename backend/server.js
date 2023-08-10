@@ -1,20 +1,24 @@
 // Import the required modules
+import { config } from 'dotenv'
 import express from 'express'
-import Course from './models/courses.js'
-import Student from './models/students.js'
 import { connect } from 'mongoose'
 import cors from 'cors'
+// set environment variables
+config()
 
 // Create an express app
 const app = express()
 
+app.use(cors())
 // Use JSON middleware to parse request body
 app.use(express.json())
-
-app.use(cors())
+app.use((req, res, next) => {
+  console.log(req.path, req.method)
+  next()
+})
 
 // Connect to MongoDB database
-connect('mongodb://localhost:27017/school', {
+connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -25,11 +29,13 @@ connect('mongodb://localhost:27017/school', {
 import studentRoutes from './routes/students.js'
 import courseRoutes from './routes/courses.js'
 import registrationRoutes from './routes/registrations.js'
+import userRoutes from './routes/user.js'
 
 // using routes as middleware with prefix
 app.use('/api/students', studentRoutes)
 app.use('/api/courses', courseRoutes)
 app.use('/api/registrations', registrationRoutes)
+app.use('/api/users', userRoutes)
 
 // Invalid requests route
 app.use((req, res) => {

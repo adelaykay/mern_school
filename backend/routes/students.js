@@ -37,6 +37,7 @@ router.get('/', async (req, res) => {
 
     // Execute the query and store the result in a variable
     const students = await query.exec()
+    console.log(students)
 
     // Check if the result is empty
     if (!students || students.length === 0) {

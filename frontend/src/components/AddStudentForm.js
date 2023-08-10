@@ -14,8 +14,8 @@ import {
   MDBValidation,
 } from 'mdb-react-ui-kit'
 import image from '../library.jpg'
-
 function AddStudentForm() {
+  
   const [student, setStudent] = useState({
     first_name: '',
     middlename: '',
@@ -25,6 +25,8 @@ function AddStudentForm() {
     date_of_birth: '',
     state_of_origin: '',
   })
+
+  
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -185,7 +187,7 @@ function AddStudentForm() {
                         type='submit'
                         onClick={register}
                         className='ms-2'
-                        color='warning'
+                        color='primary'
                         size='lg'>
                         Add Student
                       </MDBBtn>
