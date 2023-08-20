@@ -26,13 +26,13 @@ router.get('/', async (req, res) => {
       }
 
       // Set the query object to find a student by id
-      query = Student.findById(id)
+      query = Student.findById(id).populate('courses')
     } else {
       // Set the query object to find all students or by firstName or surname if provided
       query = Student.find({
         ...(first_name && { first_name }), // spread operator to conditionally add properties to the query object
         ...(surname && { surname }),
-      })
+      }).populate('courses')
     }
 
     // Execute the query and store the result in a variable
@@ -114,15 +114,16 @@ router.put('/', async (req, res) => {
       return res.status(400).json({ message: 'Invalid id' })
     }
 
+    let query
     // Set the query to find and update a student by id
-    query = await Student.findByIdAndUpdate(id, update, { new: true })
-
-    const updatedStudent = await query.exec()
+    const updatedStudent = await Student.findByIdAndUpdate(id, update, {
+      new: true,
+    }).exec()
 
     // Check if the result is empty
     if (!updatedStudent || updatedStudent.length === 0) {
       // Return an error response with status code 404 (Not Found)
-      return res.status(404).json({ message: 'No student found' })
+      return res.status(404).json({ message: 'Student not found' })
     }
 
     // Return a success response with status code 200 (OK) and the result as data

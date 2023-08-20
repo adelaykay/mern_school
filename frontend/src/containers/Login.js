@@ -18,8 +18,8 @@ import { AuthContext } from '../contexts/AuthContext'
 
 const Login = () => {
   const navigate = useNavigate()
-
   const { loggedIn, setLoggedIn } = useContext(AuthContext)
+  const [error, setError] = useState('')
   let [loginRegisterActive, setloginRegisterActive] = useState('login')
   const handleLoginRegisterClick = tab => {
     setloginRegisterActive(tab)
@@ -56,14 +56,12 @@ const Login = () => {
             if (loggedIn) navigate('/students', { replace: true })
           }
         })
-        .catch(error => {
-          console.error(
-            error.response ? error.response.data.error : error,
-            error
-          )
+        .catch(err => {
+          setError(err.response ? err.response.data.error : 'error')
+          console.error(err.response ? err.response.data.error : err)
         })
     } else {
-      alert('Invalid input')
+      setError('Invalid input')
     }
   }
   const registerUser = () => {
@@ -87,14 +85,12 @@ const Login = () => {
             if (loggedIn) navigate('/students', { replace: true })
           }
         })
-        .catch(error => {
-          console.error(
-            error.response ? error.response.data.error : error,
-            error
-          )
+        .catch(err => {
+          setError(err.response ? err.response.data.error : 'error')
+          console.error(err.response ? err.response.data.error : err)
         })
     } else {
-      alert('Invalid input')
+      setError('Invalid input')
     }
   }
 
@@ -162,7 +158,7 @@ const Login = () => {
               required
             />
             <MDBInput
-              className='mb-4'
+              className='mb-2'
               type='password'
               name='password'
               value={user.password}
@@ -171,7 +167,11 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-
+            <MDBRow>
+              <div>
+                <p className='text-danger text-start'>{error}</p>
+              </div>
+            </MDBRow>
             <MDBRow className='mb-4'>
               <MDBCol className='d-flex justify-content-center'>
                 <MDBCheckbox
@@ -254,6 +254,11 @@ const Login = () => {
               onChange={handleChange}
               required
             />
+            <MDBRow>
+              <div>
+                <p className='text-danger text-start'>{error}</p>
+              </div>
+            </MDBRow>
 
             <MDBCheckbox
               wrapperClass='d-flex justify-content-center mb-4'

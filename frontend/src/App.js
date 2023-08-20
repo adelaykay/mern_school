@@ -52,6 +52,7 @@ function App() {
       }
     }
     fetchCourses()
+
     // Fetch students data from the API when the component mounts
     const fetchStudents = async () => {
       try {
@@ -62,7 +63,7 @@ function App() {
       }
     }
     fetchStudents()
-  }, [])
+  }, [loggedIn])
 
   return (
     <div className='App'>
@@ -76,14 +77,26 @@ function App() {
               ) : (
                 <Route path='/login' element={<Login />} />
               )}
-              {!loggedIn ? <Route path='/login' element={<Login />} /> : (
+              {!loggedIn ? (
+                <Route path='/login' element={<Login />} />
+              ) : (
                 <Route path='/students/new' element={<AddStudentForm />} />
               )}
-              {!loggedIn ? <Route path='/login' element={<Login />} /> : (
+              {!loggedIn ? (
+                <Route path='/login' element={<Login />} />
+              ) : (
                 <Route path='/courses/new' element={<AddCourseForm />} />
               )}
-              {!loggedIn ? <Route path='/login' element={<Login />} /> : <Route path='/students' element={<StudentList />} />}
-              {!loggedIn ? <Route path='/login' element={<Login />} /> : <Route path='/courses' element={<CourseList />} />}
+              {!loggedIn ? (
+                <Route path='/login' element={<Login />} />
+              ) : (
+                <Route path='/students' element={<StudentList />} />
+              )}
+              {!loggedIn ? (
+                <Route path='/login' element={<Login />} />
+              ) : (
+                <Route path='/courses' element={<CourseList />} />
+              )}
               <Route path='*' element={<NoMatch />} />
             </Route>
           </Routes>

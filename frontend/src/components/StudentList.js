@@ -23,8 +23,11 @@ import {
   MDBValidationItem,
   MDBRow,
   MDBCol,
+  MDBCardImage,
+  MDBCard,
 } from 'mdb-react-ui-kit'
 import { Link } from 'react-router-dom'
+import useFetch from './useFetch'
 
 function StudentList() {
   const [student, setStudent] = useState({
@@ -35,18 +38,22 @@ function StudentList() {
     address: '',
     date_of_birth: '',
     state_of_origin: '',
+    courses: [],
   })
   const [id, setId] = useState('')
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
   const { students, setStudents } = useContext(StudentContext)
   const [editModal, setEditModal] = useState(false)
+  const [profileModal, setProfileModal] = useState(false)
 
   const handleChange = e => {
     const { name, value } = e.target
     setStudent({ ...student, [name]: value })
   }
 
-  const register = id => {
-    // set the student state to the new state
+  const update = id => {
+    // get the new student data from state
     const {
       first_name,
       middlename,
@@ -56,17 +63,29 @@ function StudentList() {
       state_of_origin,
       sex,
     } = student
-    console.log(student.id)
+    console.log(id)
     // validate the state and make post request
-    if (first_name || surname || sex || date_of_birth || state_of_origin || middlename || address) {
-      console.log(id)
+    if (
+      first_name ||
+      surname ||
+      sex ||
+      date_of_birth ||
+      state_of_origin ||
+      middlename ||
+      address
+    ) {
+      console.log(id, student)
       axios
         .put(`http://localhost:3000/api/students?id=${id}`, student)
         .then(response => {
           console.log(response.data)
           alert(response.statusText)
         })
-        .catch(console.error)
+        .catch(err => {
+          setError(err?.response?.data?.message)
+          alert(error)
+          console.log(err)
+        })
     } else {
       alert('Invalid input')
     }
@@ -76,6 +95,9 @@ function StudentList() {
     setEditModal(!editModal)
   }
 
+  const toggleProfileModal = () => {
+    setProfileModal(!profileModal)
+  }
 
   const handleDelete = id => {
     // Delete the student from the database
@@ -99,31 +121,44 @@ function StudentList() {
               <th scope='col'>Name</th>
               <th scope='col'>Sex</th>
               <th scope='col'>State of Origin</th>
-              <th></th>
-              <th></th>
+              <th scope='col' className='d-none d-lg-block'>Date of Birth</th>
+              <th className='d-none d-lg-block' scope='col'>
+                Adress
+              </th>
+              <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </MDBTableHead>
           <MDBTableBody>
             {students.map((student, idx) => (
               <tr className='table-primary' key={student._id}>
                 <th scope='row'>{idx + 1}</th>
-                <td>
+                <td
+                  role='button'
+                  onClick={() => {
+                    setStudent(student)
+                    toggleProfileModal()
+                  }}>
                   {student.surname}{' '}
                   {student.middlename && student.middlename[0] + '. '}
                   {student.first_name[0]}.
                 </td>
                 <td>{student.sex.toUpperCase()[0]}</td>
                 <td>{student.state_of_origin}</td>
+                <td className='d-none d-lg-block d-xl-none'>
+                  {' '}
+                  {student.address}
+                </td>
                 <td>
-                  <Link onClick={(e)=>{
-                    setId(e.target.id)
-                    console.log(id)
-                    toggleEditModal()
-                  }}>
+                  <Link
+                    onClick={e => {
+                      setStudent(student)
+                      console.log(student._id)
+                      toggleEditModal()
+                    }}>
                     <MDBIcon
-                      className='hover-zoom'
                       icon='edit'
-                      id={student._id}
+                      // id={student._id}
                     />
                   </Link>
                 </td>
@@ -137,7 +172,8 @@ function StudentList() {
           </MDBTableBody>
         </MDBTable>
       )}
-      {students.length < 1 && <div>Loading...</div>}
+      <MDBBtn href='/students/new'>Add New Student</MDBBtn>
+      {!students && <div>Loading...</div>}
       <MDBModal tabIndex='-1' show={editModal} setShow={setEditModal}>
         <MDBModalDialog centered>
           <MDBModalContent>
@@ -208,7 +244,7 @@ function StudentList() {
                   <MDBRadio
                     name='sex'
                     id='inlineRadio1'
-                    value='female'
+                    value={student.sex}
                     label='Female'
                     onChange={handleChange}
                     required
@@ -218,7 +254,7 @@ function StudentList() {
                     <MDBRadio
                       name='sex'
                       id='inlineRadio2'
-                      value='male'
+                      value={student.sex}
                       label='Male'
                       onChange={handleChange}
                       required
@@ -233,7 +269,7 @@ function StudentList() {
                   size='lg'
                   id='form4'
                   name='date_of_birth'
-                  value={student.date_of_birth}
+                  value={student.date_of_birth.substring(0, 10)}
                   onChange={handleChange}
                   type='date'
                   required
@@ -258,12 +294,53 @@ function StudentList() {
               <MDBBtn
                 type='submit'
                 onClick={() => {
-                  register(student._id)
+                  update(student._id)
                   toggleEditModal()
                 }}>
                 Save changes
               </MDBBtn>
             </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
+      <MDBModal tabIndex='-1' show={profileModal} setShow={setProfileModal}>
+        <MDBModalDialog centered>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>
+                {student.first_name} {student.surname}
+              </MDBModalTitle>
+              <MDBBtn
+                className='btn-close'
+                color='none'
+                onClick={toggleProfileModal}></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody>
+              <MDBCard className='text-center'>
+                <MDBCardImage
+                  src={
+                    'https://placehold.co/600x400?text=' + student.surname[0]
+                  }></MDBCardImage>
+                <br />
+                <MDBTypography className='h6'>{student.sex}</MDBTypography>
+                <MDBTypography className='h6'>
+                  {student.address ?? '-'}
+                </MDBTypography>
+                <MDBTypography className='h6'>
+                  {student.state_of_origin}
+                </MDBTypography>
+                <MDBTypography className='h6'>
+                  {student.date_of_birth.substring(0, 10)}
+                </MDBTypography>
+                <MDBTypography className='h6 mt-3'>
+                  Courses Offered
+                </MDBTypography>
+                <hr />
+                {student.courses.map(course => (
+                  <p>{course.course_name}</p>
+                ))}
+              </MDBCard>
+            </MDBModalBody>
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>

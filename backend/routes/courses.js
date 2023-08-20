@@ -26,12 +26,12 @@ router.get('/', async (req, res) => {
       }
 
       // Set the query object to find  a course by id
-      query = Course.findById(id)
+      query = Course.findById(id).populate('students')
     } else {
       // Set the query object to find all students or by first_name or surname if provided
       query = Course.find({
         ...(course_name && { course_name }), // spread operator to conditionally add properties to the query object
-      })
+      }).populate('students')
     }
 
     // Execute the query and store the result in a variable
