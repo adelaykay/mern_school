@@ -137,8 +137,8 @@ router.delete('/', (req, res) => {
 router.get('/students', async (req, res) => {
   // Find the course by id and populate its students array
   Course.findById(req.query.id)
-    .populate('students')
-    .exec()
+    .populate('students') // populate the students array
+    .exec() // execute the query and return the course object
     .then(course => {
       if (!course) return res.status(404).send('Course not found')
       // Send the students array as the response
