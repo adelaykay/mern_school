@@ -21,9 +21,9 @@ router.post('/', async (req, res) => {
     if (!student) return res.status(404).send('Student not found')
     else if (!course) return res.status(404).send('Course not found')
     // Add the course to the student's courses array
-    student.courses.push(course)
+    student.courses.push(course._id)
     // Add the student to the course's students array
-    course.students.push(student)
+    course.students.push(student._id)
     // Save both the student and the course
     Promise.all([student.save(), course.save()])
       .then(response => {

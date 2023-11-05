@@ -3,7 +3,7 @@ import express from 'express'
 import { Types } from 'mongoose'
 
 // Import the student model
-import Student from '../models/students.js'
+import Student from '../models/student.js'
 
 // Create a router object
 const router = express.Router()

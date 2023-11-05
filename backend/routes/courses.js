@@ -13,6 +13,7 @@ router.get('/', async (req, res) => {
   try {
     // Get the query parameters from the request
     const { id, course_name } = req.query
+    console.log(typeof(course_name))
 
     // Declare a variable to store the query object
     let query
@@ -30,7 +31,7 @@ router.get('/', async (req, res) => {
     } else {
       // Set the query object to find all students or by first_name or surname if provided
       query = Course.find({
-        ...(course_name && { course_name }), // spread operator to conditionally add properties to the query object
+        ...(course_name && {course_name: course_name}), // spread operator to conditionally add properties to the query object
       }).populate('students')
     }
 
@@ -38,7 +39,7 @@ router.get('/', async (req, res) => {
     const courses = await query.exec()
 
     // Check if the result is empty
-    if (!courses || courses.lenth === 0) {
+    if (!courses || courses.length === 0) {
       // Return an error response with status code 404 (Not found)
       return res.status(404).json({ message: 'No courses found' })
     }
@@ -57,6 +58,7 @@ router.post('/', async (req, res) => {
   try {
     // Get the request body from the request
     const { course_name, description } = req.body
+    console.log(typeof(course_name))
 
     // Validate the required properties are provided
     if (!course_name || !description) {

@@ -64,6 +64,9 @@ const Login = () => {
       setError('Invalid input')
     }
   }
+  const gLogin = () => {
+    
+  }
   const registerUser = () => {
     // set the student state to the new state
     const { email, password, repeat_password } = user
@@ -133,7 +136,7 @@ const Login = () => {
               </MDBBtn>
 
               <MDBBtn floating color='secondary' className='mx-1'>
-                <MDBIcon fab icon='google' />
+                <MDBIcon fab icon='google' onClick={gLogin} />
               </MDBBtn>
 
               <MDBBtn floating color='secondary' className='mx-1'>

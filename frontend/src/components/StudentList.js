@@ -121,10 +121,10 @@ function StudentList() {
               <th scope='col'>Name</th>
               <th scope='col'>Sex</th>
               <th scope='col'>State of Origin</th>
-              <th scope='col' className='d-none d-lg-block'>Date of Birth</th>
-              <th className='d-none d-lg-block' scope='col'>
-                Adress
+              <th className='d-none d-md-block' scope='col'>
+                Date of Birth
               </th>
+              <th scope='col' className='d-none d-md-block'>Adress</th>
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -145,10 +145,10 @@ function StudentList() {
                 </td>
                 <td>{student.sex.toUpperCase()[0]}</td>
                 <td>{student.state_of_origin}</td>
-                <td className='d-none d-lg-block d-xl-none'>
-                  {' '}
-                  {student.address}
+                <td className='d-none d-md-block'>
+                  {student.date_of_birth.substring(0, 10)}
                 </td>
+                <td className='d-none d-md-block'>{student.address}</td>
                 <td>
                   <Link
                     onClick={e => {

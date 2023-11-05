@@ -14,7 +14,8 @@ export const loginUser = async (req, res) => {
 
     // create token
     const token = createToken(user._id)
-    
+
+    // req.session.set(user._id, token)
 
     res.status(200).json({ email, token })
   } catch (error) {
@@ -43,17 +44,17 @@ export const signupUser = async (req, res) => {
 
 // verify user
 export const verifyUser = async (req, res, next) => {
-  const token = req.session.authorization; // Assuming the token is sent in the "Authorization" header
+  const token = req.session.authorization // Assuming the token is sent in the "Authorization" header
   if (!token) {
-    return res.status(401).json({ message: 'Access denied. Token missing.' });
+    return res.status(401).json({ message: 'Access denied. Token missing.' })
   }
 
   // Here, you would implement your token verification logic, such as using JWT (JSON Web Tokens)
   try {
-    const decodedToken = jwt.verify(token, 'your-secret-key');
-    req.user = decodedToken; // Store the decoded token in the request for further use
-    next(); // Token is valid, proceed to the next middleware or route handler
+    const decodedToken = Jwt.verify(token, 'your-secret-key')
+    req.user = decodedToken // Store the decoded token in the request for further use
+    next() // Token is valid, proceed to the next middleware or route handler
   } catch (err) {
-    return res.status(403).json({ message: 'Access denied. Invalid token.' });
+    return res.status(403).json({ message: 'Access denied. Invalid token.' })
   }
 }

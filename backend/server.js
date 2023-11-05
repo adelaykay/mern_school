@@ -18,12 +18,11 @@ app.use((req, res, next) => {
 })
 
 // Connect to MongoDB database
-connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error(err))
+
+// console.log('Connected to MongoDB')
 
 // API endpoint routes
 import studentRoutes from './routes/students.js'
@@ -38,10 +37,13 @@ app.use('/api/registrations', registrationRoutes)
 app.use('/api/users', userRoutes)
 
 // Invalid requests route
-app.use((req, res) => {
-  res.status(404).json({ message: 'Invalid request' })
-})
+// app.use((req, res) => {
+//   res.status(404).json({ message: 'Invalid request' })
+// })
 
+app.get('/', (req, res) => {
+  res.send('Welcome')
+})
 // Start the server on port 3000
 const port = process.env.PORT || 3000
 app.listen(port, () => console.log(`Server listening on port ${port}`))
